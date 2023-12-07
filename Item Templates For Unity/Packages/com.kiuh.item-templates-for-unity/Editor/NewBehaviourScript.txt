@@ -1,0 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
+
+namespace $rootnamespace$
+{
+    [AddComponentMenu("Scripts/$rootpath$/$rootnamespace$.$safeitemname$")]
+    internal class $safeitemname$ : MonoBehaviour 
+    {
+        private void Awake()
+        {
+            
+        }
+    }
+}

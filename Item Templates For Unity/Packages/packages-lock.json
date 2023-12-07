@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.kiuh.item-templates-for-unity": {
+    "com.kylturpro.item-templates-for-unity": {
       "version": "file:com.kiuh.item-templates-for-unity",
       "depth": 0,
       "source": "embedded",
