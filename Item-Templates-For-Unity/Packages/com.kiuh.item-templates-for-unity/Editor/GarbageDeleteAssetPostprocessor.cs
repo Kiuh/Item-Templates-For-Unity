@@ -16,9 +16,10 @@ public class GarbageDeleteAssetPostprocessor : AssetPostprocessor
     {
         if (importedAssets.Length > 0)
         {
-            string[] toRemove = Directory.GetFiles(
-                CreateBehaviourScript.TO_REMOVE_DIRECTORY_FILE_PATH
-            );
+            string[] toRemove = Directory
+                .GetFiles(CreateBehaviourScript.EDITOR_FOLDER_PATH)
+                .Where(x => Path.GetFileName(x).StartsWith("___"))
+                .ToArray();
             List<string> outFailedFiles = new();
             _ = AssetDatabase.DeleteAssets(toRemove, outFailedFiles);
             if (outFailedFiles.Count > 0)
