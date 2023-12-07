@@ -7,8 +7,8 @@ using UnityEngine;
 
 namespace $rootnamespace$
 {
-    [AddComponentMenu("Scripts/$rootpath$/$rootnamespace$.$safeitemname$")]
-    internal class $safeitemname$ : MonoBehaviour 
+    [AddComponentMenu("Scripts/$rootpath$/$rootnamespace$.#SCRIPTNAME#")]
+    internal class #SCRIPTNAME# : MonoBehaviour 
     {
         private void Awake()
         {

@@ -2,41 +2,58 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-public class CreateBehaviourScript : EditorWindow
+public static class CreateBehaviourScript
 {
-    [MenuItem("Assets/Create/C# Script with namespace", priority = 50)]
+    public const string DEFAULT_SCRIPT_NAME = "NewBehaviourScript";
+    public const string EDITOR_FOLDER_PATH =
+        "Packages/com.kylturpro.item-templates-for-unity/Editor";
+    public const string TO_REMOVE_DIRECTORY_FILE_PATH = EDITOR_FOLDER_PATH + "/Garbage";
+
+    private const string TO_REMOVE = "Assets";
+    private static string BASE_APPLICATION_PATH =>
+        Application.dataPath[..^TO_REMOVE.Length].Replace('\\', '/');
+
+    [MenuItem("Assets/Create/C# Script With Namespace", priority = 50)]
     public static void ShowWindow()
     {
-        _ = EditorWindow.GetWindow(typeof(CreateBehaviourScript));
+        // Get unique script name with path in context
+        string newScriptName = GetNewScriptPathName(DEFAULT_SCRIPT_NAME);
+
+        // Get base template content
+        string content = GetTextFromAssetText($"{EDITOR_FOLDER_PATH}/BaseTemplate.txt");
+
+        // Writing pretty template
+        string assetRelativePath = Path.GetRelativePath(BASE_APPLICATION_PATH, newScriptName)
+            .Replace(Path.GetFileName(newScriptName), "");
+        string neededNamespace = assetRelativePath
+            .TrimEnd('\\')
+            .Replace("\\", ".")
+            .Replace(" ", "_")
+            .Replace("Assets.Scripts.", "");
+        content = content.Replace("$rootnamespace$", neededNamespace);
+        content = content.Replace("$rootpath$", neededNamespace.Replace(".", "/"));
+
+        // Generating unique template
+        string templateNamePath = AssetDatabase.GenerateUniqueAssetPath(
+            $"{TO_REMOVE_DIRECTORY_FILE_PATH}/NewTemplate.cs.txt"
+        );
+
+        // Creating template
+        File.Create(templateNamePath).Close();
+        File.WriteAllText(templateNamePath, content);
+
+        ProjectWindowUtil.CreateScriptAssetFromTemplateFile(templateNamePath, newScriptName);
     }
 
-    private bool autoFocus = true;
-    private string scriptName = "NewScript";
-
-    private void OnGUI()
+    private static string GetTextFromAssetText(string path)
     {
-        GUILayout.Label("Custom Script Creator", EditorStyles.boldLabel);
-        EditorGUI.BeginChangeCheck();
-        GUI.SetNextControlName(scriptName);
-
-        scriptName = EditorGUILayout.TextField("Script Name", scriptName);
-
-        if (autoFocus)
-        {
-            EditorGUI.FocusTextInControl("NewScript");
-            autoFocus = false;
-        }
-
-        if (GUILayout.Button("Create Script") || Event.current.keyCode == KeyCode.Return)
-        {
-            _ = EditorGUI.EndChangeCheck();
-            CreateNewScript();
-        }
+        return AssetDatabase.LoadAssetAtPath<TextAsset>(path).text;
     }
 
-    private void CreateNewScript()
+    private static string GetNewScriptPathName(string scriptName)
     {
         string filePath;
+
         if (Selection.assetGUIDs.Length == 0)
         {
             filePath = "Assets";
@@ -52,31 +69,6 @@ public class CreateBehaviourScript : EditorWindow
             }
         }
 
-        string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath(
-            $"{filePath}/{scriptName}.cs"
-        );
-
-        TextAsset textAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(
-            "Packages/com.kylturpro.item-templates-for-unity/Editor/NewBehaviourScript.txt"
-        );
-
-        string content = textAsset.text;
-        string writeNameSpace = filePath
-            .Replace("/", ".")
-            .Replace("Assets.", "")
-            .Replace("Scripts.", "");
-        content = content.Replace("$rootnamespace$", writeNameSpace);
-        content = content.Replace("$rootpath$", writeNameSpace.Replace(".", "/"));
-        content = content.Replace("$safeitemname$", scriptName);
-
-        File.WriteAllText(assetPathAndName, content);
-
-        AssetDatabase.Refresh();
-
-        Object createdScript = AssetDatabase.LoadAssetAtPath(assetPathAndName, typeof(Object));
-        Selection.activeObject = createdScript;
-        EditorGUIUtility.PingObject(createdScript);
-
-        Close();
+        return AssetDatabase.GenerateUniqueAssetPath($"{filePath}/{scriptName}.cs");
     }
 }
