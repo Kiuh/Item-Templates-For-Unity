@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -19,15 +18,23 @@ public class GarbageDeleteAssetPostprocessor : AssetPostprocessor
             string[] toRemove = Directory
                 .GetFiles(CreateBehaviourScript.EDITOR_FOLDER_PATH)
                 .Where(x => Path.GetFileName(x).StartsWith("___"))
+                .Select(x => x.Replace(@"\\", "/"))
                 .ToArray();
-            List<string> outFailedFiles = new();
-            _ = AssetDatabase.DeleteAssets(toRemove, outFailedFiles);
-            if (outFailedFiles.Count > 0)
+
+            foreach (string path in toRemove)
             {
-                Debug.LogError(
-                    $"Error deleting garbage files: {outFailedFiles.Aggregate("", (x, y) => x + "\n" + y)}"
-                );
+                Cache cache = Caching.GetCacheByPath(path);
+                _ = Caching.RemoveCache(cache);
             }
+
+            //List<string> outFailedFiles = new();
+            //_ = AssetDatabase.DeleteAssets(toRemove, outFailedFiles);
+            //if (outFailedFiles.Count > 0)
+            //{
+            //    Debug.LogError(
+            //        $"Error deleting garbage files: {outFailedFiles.Aggregate("", (x, y) => x + "\n" + y)}"
+            //    );
+            //}
         }
     }
 }
