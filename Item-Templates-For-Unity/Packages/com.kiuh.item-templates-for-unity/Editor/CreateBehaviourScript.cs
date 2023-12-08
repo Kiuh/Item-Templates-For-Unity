@@ -7,7 +7,7 @@ public static class CreateBehaviourScript
     public const string DEFAULT_SCRIPT_NAME = "NewBehaviourScript";
     public const string EDITOR_FOLDER_PATH =
         "Packages/com.kylturpro.item-templates-for-unity/Editor";
-
+    public const string TEMP_GENERATING_FOLDER = "Assets";
     private const string TO_REMOVE = "Assets";
     private static string BASE_APPLICATION_PATH =>
         Application.dataPath[..^TO_REMOVE.Length].Replace('\\', '/');
@@ -34,7 +34,7 @@ public static class CreateBehaviourScript
 
         // Generating unique template
         string templateNamePath = AssetDatabase.GenerateUniqueAssetPath(
-            $"{EDITOR_FOLDER_PATH}/___NewTemplate.cs.txt"
+            $"{TEMP_GENERATING_FOLDER}/________NewTemplate.cs.txt"
         );
 
         // Creating template
