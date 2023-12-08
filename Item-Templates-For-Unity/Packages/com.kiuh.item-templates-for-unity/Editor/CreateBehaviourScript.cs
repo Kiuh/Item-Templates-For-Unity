@@ -7,7 +7,7 @@ public static class CreateBehaviourScript
     public const string DEFAULT_SCRIPT_NAME = "NewBehaviourScript";
     public const string EDITOR_FOLDER_PATH =
         "Packages/com.kylturpro.item-templates-for-unity/Editor";
-
+    private const string BUFFER_TEMPLATE_NAME_PATH = EDITOR_FOLDER_PATH + "/BufferTemplate.cs.txt";
     private const string TO_REMOVE = "Assets";
     private static string BASE_APPLICATION_PATH =>
         Application.dataPath[..^TO_REMOVE.Length].Replace('\\', '/');
@@ -32,16 +32,13 @@ public static class CreateBehaviourScript
         content = content.Replace("$rootnamespace$", neededNamespace);
         content = content.Replace("$rootpath$", neededNamespace.Replace(".", "/"));
 
-        // Generating unique template
-        string templateNamePath = AssetDatabase.GenerateUniqueAssetPath(
-            $"{EDITOR_FOLDER_PATH}/___NewTemplate.cs.txt"
+        // Write to buffer template
+        File.WriteAllText(BUFFER_TEMPLATE_NAME_PATH, content);
+
+        ProjectWindowUtil.CreateScriptAssetFromTemplateFile(
+            BUFFER_TEMPLATE_NAME_PATH,
+            newScriptName
         );
-
-        // Creating template
-        File.Create(templateNamePath).Close();
-        File.WriteAllText(templateNamePath, content);
-
-        ProjectWindowUtil.CreateScriptAssetFromTemplateFile(templateNamePath, newScriptName);
     }
 
     private static string GetTextFromAssetText(string path)
