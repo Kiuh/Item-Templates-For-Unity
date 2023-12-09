@@ -1,10 +1,10 @@
-# Item Templates For Unity
+# Item Templates for Unity
 
 Unity package that adds item template for Unity Class with namespace,
-AddComponentMenu attribute and extends MonoBehaviour class. 
+AddComponentMenu attribute, and extends MonoBehaviour class. 
 Also removes Assets.Scripts from namespace for better nameing.
 
-Also its exist [Visual Studio Extention](https://marketplace.visualstudio.com/items?itemName=nikolay-khimich.unity-class-template) with the same tool
+Also, there is a [Visual Studio extension](https://marketplace.visualstudio.com/items?itemName=nikolay-khimich.unity-class-template) with the same tool.
 
 ## Setup
 
@@ -19,8 +19,8 @@ Also its exist [Visual Studio Extention](https://marketplace.visualstudio.com/it
 
 ## Usage
 
-Now you can create file via top menu:
+Now you can create a file via top menu:
 
 <img width="600" alt="image" src="https://github.com/Kiuh/Item-Templates-For-Unity/assets/30412223/0b4aef61-728d-4852-910b-ccf3929e9776">
 
-Or with clicking right mouse click on project window context Create -> C# Script with namespace
+Alternatively, right-click on the project window context. Create -> C# Script with namespace
