@@ -1,3 +1,4 @@
+# if UNITY_EDITOR
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -71,3 +72,4 @@ public static class CreateBehaviourScript
         return AssetDatabase.GenerateUniqueAssetPath($"{filePath}/{scriptName}.cs");
     }
 }
+#endif
