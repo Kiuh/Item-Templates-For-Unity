@@ -4,31 +4,34 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-public class GarbageDeleteAssetPostprocessor : AssetPostprocessor
+namespace UnityTemplateWithNamespace
 {
-    private static void OnPostprocessAllAssets(
-        string[] importedAssets,
-        string[] deletedAssets,
-        string[] movedAssets,
-        string[] movedFromAssetPaths,
-        bool didDomainReload
-    )
+    public class GarbageDeleteAssetPostprocessor : AssetPostprocessor
     {
-        if (importedAssets.Length > 0)
+        private static void OnPostprocessAllAssets(
+            string[] importedAssets,
+            string[] deletedAssets,
+            string[] movedAssets,
+            string[] movedFromAssetPaths,
+            bool didDomainReload
+        )
         {
-            string[] toRemove = Directory
-                .GetFiles(CreateBehaviourScript.TEMP_GENERATING_FOLDER)
-                .Where(x => Path.GetFileName(x).StartsWith("________"))
-                .Select(x => x.Replace(@"\\", "/"))
-                .ToArray();
-
-            List<string> outFailedFiles = new();
-            _ = AssetDatabase.DeleteAssets(toRemove, outFailedFiles);
-            if (outFailedFiles.Count > 0)
+            if (importedAssets.Length > 0)
             {
-                Debug.LogError(
-                    $"Error deleting garbage files: {outFailedFiles.Aggregate("", (x, y) => x + "\n" + y)}"
-                );
+                string[] toRemove = Directory
+                    .GetFiles(CreateBehaviourScript.TEMP_GENERATING_FOLDER)
+                    .Where(x => Path.GetFileName(x).StartsWith("________"))
+                    .Select(x => x.Replace(@"\\", "/"))
+                    .ToArray();
+
+                List<string> outFailedFiles = new();
+                _ = AssetDatabase.DeleteAssets(toRemove, outFailedFiles);
+                if (outFailedFiles.Count > 0)
+                {
+                    Debug.LogError(
+                        $"Error deleting garbage files: {outFailedFiles.Aggregate("", (x, y) => x + "\n" + y)}"
+                    );
+                }
             }
         }
     }
