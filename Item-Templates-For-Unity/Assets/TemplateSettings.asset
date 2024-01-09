@@ -16,3 +16,5 @@ MonoBehaviour:
   removingNamespaceWords:
   - Assets
   - Scripts
+  removingClassEndings:
+  - Impl

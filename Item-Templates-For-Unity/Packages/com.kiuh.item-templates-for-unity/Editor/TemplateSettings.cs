@@ -78,5 +78,10 @@ namespace UnityTemplateWithNamespace
         [SerializeField]
         private List<string> removingNamespaceWords = new() { "Assets", "Scripts" };
         public IEnumerable<string> RemovingNamespaceWords => removingNamespaceWords;
+
+        [Header("Class endings to delete")]
+        [SerializeField]
+        private List<string> removingClassEndings = new() { "Impl" };
+        public IEnumerable<string> RemovingClassEndings => removingClassEndings;
     }
 }
