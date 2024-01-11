@@ -32,8 +32,17 @@ namespace UnityTemplateWithNamespace
                         content = content.Replace(ending + "\")]", "\")]");
                     }
 
+                    if (TemplateSettings.Instance.DeleteDuplication)
+                    {
+                        int firstIndex = content.IndexOf(content.Split(".").Last());
+                        int lastIndex = content.IndexOf("\")]");
+                        string scriptName = content[firstIndex..lastIndex];
+                        content = content.Replace(scriptName + "." + scriptName, scriptName);
+                    }
+
                     File.WriteAllText(AssetDatabase.GetAssetPath(script), content);
                     EditorUtility.SetDirty(script);
+                    AssetDatabase.Refresh();
                 }
             }
         }

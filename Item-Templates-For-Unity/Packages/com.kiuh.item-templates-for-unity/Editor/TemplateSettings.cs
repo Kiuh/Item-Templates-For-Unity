@@ -37,35 +37,36 @@ namespace UnityTemplateWithNamespace
                     lastKnownLocation = path;
                     EditorPrefs.SetString(LAST_KNOWN_LOCATION, lastKnownLocation);
                 }
+                else
+                {
+                    InitializeTemplateSettings();
+                }
+
                 return instance;
             }
         }
 
-        [InitializeOnLoadMethod]
         private static void InitializeTemplateSettings()
         {
-            if (!Instance)
+            _ = EditorUtility.DisplayDialog(
+                "Template settings installer",
+                "Template settings asset does not exist, pick a location in project to create it.",
+                "Ok"
+            );
+
+            string path = EditorUtility.SaveFilePanelInProject(
+                "Template installer",
+                "TemplateSettings",
+                "asset",
+                ""
+            );
+
+            if (string.IsNullOrEmpty(path) == false)
             {
-                _ = EditorUtility.DisplayDialog(
-                    "Template settings installer",
-                    "Template settings asset does not exist, pick a location in project to create it.",
-                    "Ok"
-                );
-
-                string path = EditorUtility.SaveFilePanelInProject(
-                    "Template installer",
-                    "TemplateSettings",
-                    "asset",
-                    ""
-                );
-
-                if (string.IsNullOrEmpty(path) == false)
-                {
-                    instance = ScriptableObject.CreateInstance<TemplateSettings>();
-                    AssetDatabase.CreateAsset(instance, path);
-                    AssetDatabase.SaveAssets();
-                    AssetDatabase.Refresh();
-                }
+                instance = ScriptableObject.CreateInstance<TemplateSettings>();
+                AssetDatabase.CreateAsset(instance, path);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
             }
         }
 
@@ -83,5 +84,10 @@ namespace UnityTemplateWithNamespace
         [SerializeField]
         private List<string> removingClassEndings = new() { "Impl" };
         public IEnumerable<string> RemovingClassEndings => removingClassEndings;
+
+        [Header("Delete last namespace word in Add component menu attribute in class name?")]
+        [SerializeField]
+        private bool deleteDuplication = true;
+        public bool DeleteDuplication => deleteDuplication;
     }
 }
