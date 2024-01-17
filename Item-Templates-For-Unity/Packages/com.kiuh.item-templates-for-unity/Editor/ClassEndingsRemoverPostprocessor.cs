@@ -36,7 +36,8 @@ namespace UnityTemplateWithNamespace
                     {
                         int firstIndex = content.IndexOf(content.Split(".").Last());
                         int lastIndex = content.IndexOf("\")]");
-                        string scriptName = content.Substring(firstIndex, lastIndex);
+                        int length = lastIndex - firstIndex;
+                        string scriptName = content.Substring(firstIndex, length);
                         content = content.Replace(scriptName + "." + scriptName, scriptName);
                     }
 
